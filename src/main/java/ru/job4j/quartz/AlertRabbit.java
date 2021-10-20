@@ -17,24 +17,26 @@ import static org.quartz.SimpleScheduleBuilder.*;
 
 public class AlertRabbit {
 
-    private static Properties getProperties() {
+    private static Connection init(Properties properties) throws Exception {
+
+        Class.forName(properties.getProperty("driver-class-name"));
+
+        return DriverManager.getConnection(
+                properties.getProperty("url"),
+                properties.getProperty("username"),
+                properties.getProperty("password")
+        );
+    }
+
+    private static Properties readProperties() throws IOException {
         Properties properties = new Properties();
-        try {
-            properties.load(new FileReader("src/main/resources/rabbit.properties"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        properties.load(new FileReader("src/main/resources/rabbit.properties"));
         return properties;
     }
 
-    public static void main(String[] args) throws Exception {
-
-        Class.forName(getProperties().getProperty("driver-class-name"));
-        try (Connection connection = DriverManager.getConnection(
-                getProperties().getProperty("url"),
-                getProperties().getProperty("username"),
-                getProperties().getProperty("password")
-        )) {
+    public static void main(String[] args) {
+        try {
+            Connection connection = init(readProperties());
             List<Long> store = new ArrayList<>();
             Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
             scheduler.start();
@@ -45,7 +47,7 @@ public class AlertRabbit {
                     .build();
             SimpleScheduleBuilder times = simpleSchedule()
                     .withIntervalInSeconds(Integer.parseInt(
-                            getProperties().getProperty("rabbit.interval")))
+                            readProperties().getProperty("rabbit.interval")))
                     .repeatForever();
             Trigger trigger = newTrigger()
                     .startNow()
@@ -55,6 +57,8 @@ public class AlertRabbit {
             Thread.sleep(10001);
             scheduler.shutdown();
             System.out.println(store);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
