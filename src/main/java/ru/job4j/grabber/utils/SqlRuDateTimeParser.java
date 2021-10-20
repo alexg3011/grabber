@@ -23,19 +23,18 @@ public class SqlRuDateTimeParser implements DateTimeParser {
             new AbstractMap.SimpleEntry<>("окт", "10"),
             new AbstractMap.SimpleEntry<>("ноя", "11"),
             new AbstractMap.SimpleEntry<>("дек", "12")
-            );
+    );
 
     @Override
     public LocalDateTime parse(String parse) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MM yy HH:mm");
-                parse = parse.replace(",", "");
+        parse = parse.replace(",", "");
         if (parse.contains("сегодня")) {
-            parse=parse.replace("сегодня", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd MM yy")));
+            parse = parse.replace("сегодня", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd MM yy")));
 
-        } else  if(parse.contains("вчера")) {
-            parse=parse.replace("вчера", LocalDateTime.now().minusDays(1).format(DateTimeFormatter.ofPattern("dd MM yy")));
-        }
-        else {
+        } else if (parse.contains("вчера")) {
+            parse = parse.replace("вчера", LocalDateTime.now().minusDays(1).format(DateTimeFormatter.ofPattern("dd MM yy")));
+        } else {
 
             String[] tmp = parse.split(" ");
             tmp[1] = MONTHS.get(tmp[1]);
