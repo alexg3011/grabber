@@ -1,12 +1,15 @@
 package ru.job4j.grabber.utils;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
-import static java.time.format.DateTimeFormatter.*;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.AbstractMap;
+import java.util.Map;
 
 public class SqlRuDateTimeParser implements DateTimeParser {
 
@@ -42,5 +45,22 @@ public class SqlRuDateTimeParser implements DateTimeParser {
         }
 
         return LocalDateTime.parse(parse, formatter);
+    }
+
+    public static Post readPost(String link) throws IOException {
+        Post post = new Post();
+        SqlRuDateTimeParser parser = new SqlRuDateTimeParser();
+        Document doc = Jsoup.connect(link).get();
+        String description = doc.select(".msgBody").get(1).text();
+        String date = doc.select(".msgFooter").first().text().split(" \\[")[0];
+        LocalDateTime created = parser.parse(date);
+
+        return new Post(description, created);
+    }
+
+    public static void main(String[] args) throws IOException {
+        System.out.println(readPost(
+                "https://www.sql.ru/forum/1325330/lidy-be-fe-senior-cistemnye-analitiki-qa-i-devops-moskva-do-200t")
+                .getDescription());
     }
 }
