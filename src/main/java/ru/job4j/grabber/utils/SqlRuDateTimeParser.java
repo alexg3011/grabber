@@ -2,8 +2,6 @@ package ru.job4j.grabber.utils;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -48,7 +46,6 @@ public class SqlRuDateTimeParser implements DateTimeParser {
     }
 
     public static Post readPost(String link) throws IOException {
-        Post post = new Post();
         SqlRuDateTimeParser parser = new SqlRuDateTimeParser();
         Document doc = Jsoup.connect(link).get();
         String description = doc.select(".msgBody").get(1).text();
