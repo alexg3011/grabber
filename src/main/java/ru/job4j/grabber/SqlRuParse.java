@@ -34,11 +34,22 @@ public class SqlRuParse implements Parse {
     }
 
     @Override
-    public Post detail(String link) throws IOException {
-        Document doc = Jsoup.connect(link).get();
-        String title = doc.select(".messageHeader").get(0).text();
-        String description = doc.select(".msgBody").get(1).text();
-        String date = doc.select(".msgFooter").first().text().split(" \\[")[0];
+    public Post detail(String link) {
+        Document doc = null;
+        String description = null;
+        String date = null;
+        try {
+            doc = Jsoup.connect(link).get();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String title = null;
+        if (doc != null) {
+            title = doc.select(".messageHeader").get(0).text();
+
+            description = doc.select(".msgBody").get(1).text();
+            date = doc.select(".msgFooter").first().text().split(" \\[")[0];
+        }
         LocalDateTime created = new SqlRuDateTimeParser().parse(date);
         return new Post(title, link, description, created);
     }
