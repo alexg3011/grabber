@@ -7,13 +7,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
-import static org.quartz.JobBuilder.*;
-import static org.quartz.TriggerBuilder.*;
-import static org.quartz.SimpleScheduleBuilder.*;
+import static org.quartz.JobBuilder.newJob;
+import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
+import static org.quartz.TriggerBuilder.newTrigger;
 
 public class AlertRabbit {
 
@@ -28,15 +26,19 @@ public class AlertRabbit {
         );
     }
 
-    private static Properties readProperties() throws IOException {
+    private static Properties readProperties() {
         Properties properties = new Properties();
-        properties.load(new FileReader("src/main/resources/rabbit.properties"));
+        try (FileReader fr = new FileReader("src/main/resources/rabbit.properties")) {
+            properties.load(fr);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return properties;
     }
 
     public static void main(String[] args) {
-        List<Long> store = new ArrayList<>();
-        try (Connection connection = init(readProperties())) {
+        Properties properties = readProperties();
+        try (Connection connection = init(properties)) {
             Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
             scheduler.start();
             JobDataMap data = new JobDataMap();
@@ -46,7 +48,7 @@ public class AlertRabbit {
                     .build();
             SimpleScheduleBuilder times = simpleSchedule()
                     .withIntervalInSeconds(Integer.parseInt(
-                            readProperties().getProperty("rabbit.interval")))
+                            properties.getProperty("rabbit.interval")))
                     .repeatForever();
             Trigger trigger = newTrigger()
                     .startNow()
@@ -55,7 +57,6 @@ public class AlertRabbit {
             scheduler.scheduleJob(job, trigger);
             Thread.sleep(10001);
             scheduler.shutdown();
-            System.out.println(store);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -70,8 +71,8 @@ public class AlertRabbit {
         public void execute(JobExecutionContext context) {
             System.out.println("Rabbit runs here ...");
 
-            try (Connection connection = (Connection) context.getJobDetail().getJobDataMap().get("connection");
-                 PreparedStatement statement =
+            Connection connection = (Connection) context.getJobDetail().getJobDataMap().get("connection");
+            try (PreparedStatement statement =
                          connection.prepareStatement("insert into rabbit (created_date) values (?)")) {
                 statement.setTimestamp(1, Timestamp.valueOf(LocalDateTime.now().withNano(0)));
                 statement.execute();
