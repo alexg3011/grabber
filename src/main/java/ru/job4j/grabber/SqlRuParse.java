@@ -51,6 +51,6 @@ public class SqlRuParse implements Parse {
             date = doc.select(".msgFooter").first().text().split(" \\[")[0];
         }
         LocalDateTime created = dateTimeParser.parse(date);
-        return new Post(title, link, description, created);
+        return new Post(title, description, link, created);
     }
 }

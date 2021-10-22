@@ -18,18 +18,18 @@ public class Post {
         this.created = created;
     }
 
-    public Post(String title, String link, String description, LocalDateTime created) {
+    public Post(String title, String description, String link, LocalDateTime created) {
         this.title = title;
-        this.link = link;
         this.description = description;
+        this.link = link;
         this.created = created;
     }
 
-    public Post(int id, String title, String link, String description, LocalDateTime created) {
+    public Post(int id, String title, String description, String link, LocalDateTime created) {
         this.id = id;
         this.title = title;
-        this.link = link;
         this.description = description;
+        this.link = link;
         this.created = created;
     }
 
@@ -92,12 +92,11 @@ public class Post {
 
     @Override
     public String toString() {
-        return "Post{"
-                + "id=" + id
-                + ", title='" + title + '\''
-                + ", link='" + link + '\''
-                + ", description='" + description + '\''
-                + ", created=" + created
-                + '}';
+        return "id=" + id + '\n'
+                + "Тема: " + title + '\n'
+                + "Пост: " + description + '\n'
+                + "Ссылка: '" + link + '\n'
+                + "Создан: " + created
+                + System.lineSeparator();
     }
 }
