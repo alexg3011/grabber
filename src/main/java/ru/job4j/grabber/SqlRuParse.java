@@ -24,7 +24,7 @@ public class SqlRuParse implements Parse {
     @Override
     public List<Post> list(String link) throws IOException {
         List<Post> list = new ArrayList<>();
-        Document doc = Jsoup.connect("https://www.sql.ru/forum/job-offers").get();
+        Document doc = Jsoup.connect(link).get();
         Elements row = doc.select(".postslisttopic");
         for (Element td : row) {
             String nextLink = td.child(0).attr("href");
@@ -50,11 +50,7 @@ public class SqlRuParse implements Parse {
             description = doc.select(".msgBody").get(1).text();
             date = doc.select(".msgFooter").first().text().split(" \\[")[0];
         }
-        LocalDateTime created = new SqlRuDateTimeParser().parse(date);
+        LocalDateTime created = dateTimeParser.parse(date);
         return new Post(title, link, description, created);
-    }
-
-    public static void main(String[] args) {
-
     }
 }
