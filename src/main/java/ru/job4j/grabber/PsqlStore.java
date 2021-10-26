@@ -33,24 +33,22 @@ public class PsqlStore implements Store, AutoCloseable {
     @Override
     public void save(Post post) {
         String verify = post.getTitle().toLowerCase(Locale.ROOT);
-        if (verify.contains("java") && !verify.contains("javascript")) {
-            try (PreparedStatement statement = cnn.prepareStatement(
-                    "insert into post(name, text, link, created) values (?, ?, ?, ?);",
-                    Statement.RETURN_GENERATED_KEYS)
-            ) {
-                statement.setString(1, post.getTitle());
-                statement.setString(2, post.getDescription());
-                statement.setString(3, post.getLink());
-                statement.setTimestamp(4, Timestamp.valueOf(post.getCreated()));
-                statement.execute();
-                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        post.setId(generatedKeys.getInt(1));
-                    }
+        try (PreparedStatement statement = cnn.prepareStatement(
+                "insert into post(name, text, link, created) values (?, ?, ?, ?);",
+                Statement.RETURN_GENERATED_KEYS)
+        ) {
+            statement.setString(1, post.getTitle());
+            statement.setString(2, post.getDescription());
+            statement.setString(3, post.getLink());
+            statement.setTimestamp(4, Timestamp.valueOf(post.getCreated()));
+            statement.execute();
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    post.setId(generatedKeys.getInt(1));
                 }
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
             }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
     }
 

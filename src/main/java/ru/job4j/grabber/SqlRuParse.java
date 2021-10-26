@@ -6,7 +6,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import ru.job4j.grabber.utils.DateTimeParser;
 import ru.job4j.grabber.utils.Post;
-import ru.job4j.grabber.utils.SqlRuDateTimeParser;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -28,29 +27,38 @@ public class SqlRuParse implements Parse {
         Elements row = doc.select(".postslisttopic");
         for (Element td : row) {
             String nextLink = td.child(0).attr("href");
-            list.add(detail(nextLink));
+            Post post = detail(nextLink);
+            if (post != null) {
+                list.add(post);
+            }
         }
         return list;
     }
 
     @Override
     public Post detail(String link) {
+        Post post = null;
         Document doc = null;
-        String description = null;
-        String date = null;
+        String description;
+        String date;
+        String title;
+
         try {
             doc = Jsoup.connect(link).get();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String title = null;
+
         if (doc != null) {
             title = doc.select(".messageHeader").get(0).text();
-
-            description = doc.select(".msgBody").get(1).text();
-            date = doc.select(".msgFooter").first().text().split(" \\[")[0];
+            String verify = title.toLowerCase();
+            if (verify.contains("java") && !verify.contains("javascript")) {
+                description = doc.select(".msgBody").get(1).text();
+                date = doc.select(".msgFooter").first().text().split(" \\[")[0];
+                LocalDateTime created = dateTimeParser.parse(date);
+                post = new Post(title, description, link, created);
+            }
         }
-        LocalDateTime created = dateTimeParser.parse(date);
-        return new Post(title, description, link, created);
+        return post;
     }
 }
