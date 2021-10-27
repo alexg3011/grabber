@@ -44,4 +44,5 @@ public class GeneratorTest {
         String string = "I am a ${name}, Who are ${subject}?";
         template.produce(string, templates);
     }
+
 }
