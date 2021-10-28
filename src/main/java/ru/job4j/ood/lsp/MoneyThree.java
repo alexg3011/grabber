@@ -4,7 +4,7 @@ public class MoneyThree {
     public int sendMoney(int money) {
         if (money < 0) {
             throw new IllegalArgumentException("Отрицательная сумма");
-        } else if(money>1000) {
+        } else if (money > 1000) {
             throw new IllegalArgumentException("Слишком большая сумма");
         }
         return money;
