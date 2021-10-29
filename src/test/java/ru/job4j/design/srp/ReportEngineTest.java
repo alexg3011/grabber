@@ -121,15 +121,13 @@ public class ReportEngineTest {
         Employee worker = new Employee("Ivan", null, null, 100);
         store.add(worker);
         Report xml = new ReportXML(store);
-        String exp = """
-                <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-                <employees>
-                    <employee>
-                        <name>Ivan</name>
-                        <salary>100.0</salary>
-                    </employee>
-                </employees>
-                """;
+        String exp = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+                + "<employees>\n"
+                + "    <employee>\n"
+                + "        <name>Ivan</name>\n"
+                + "        <salary>100.0</salary>\n"
+                + "    </employee>\n"
+                + "</employees>\n";
         assertThat(xml.generate(em -> true), is(exp));
     }
 }

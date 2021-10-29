@@ -30,7 +30,6 @@ public class ReportXML implements Report {
         StringWriter writer = new StringWriter();
         marshaller.marshal(employees, writer);
         xml = writer.getBuffer().toString();
-
         return xml;
     }
 

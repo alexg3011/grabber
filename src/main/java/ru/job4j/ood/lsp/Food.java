@@ -4,11 +4,11 @@ import java.util.Date;
 import java.util.Objects;
 
 public class Food {
-    String name;
-    Date expiryDate;
-    Date createDate;
-    int price;
-    boolean discount;
+    private String name;
+    private Date expiryDate;
+    private Date createDate;
+    private int price;
+    private boolean discount;
 
     public Food(String name, Date expiryDate, Date createDate, int price, boolean discount) {
         this.name = name;
