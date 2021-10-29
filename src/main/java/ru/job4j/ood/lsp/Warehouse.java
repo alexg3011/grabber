@@ -2,14 +2,13 @@ package ru.job4j.ood.lsp;
 
 import java.util.List;
 
-public class Warehouse implements Strategy {
+public class Warehouse implements Storage {
     private List<Food> warehouse;
-    private Calculator calculator;
 
     @Override
     public boolean add(Food food) {
         boolean rsl = false;
-        float interest = calculator.run(food);
+        float interest = Calculator.run(food);
         if (interest < 25) {
             warehouse.add(food);
             rsl = true;

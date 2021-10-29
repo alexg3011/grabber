@@ -2,7 +2,7 @@ package ru.job4j.ood.lsp;
 
 public class Calculator {
 
-    public float run(Food food) {
+    public static float run(Food food) {
         long differenceOne = food.getExpiryDate().getTime() - food.getCreateDate().getTime();
         long differenceTwo = System.currentTimeMillis() - food.getCreateDate().getTime();
         return ((float) differenceTwo / differenceOne) * 100;

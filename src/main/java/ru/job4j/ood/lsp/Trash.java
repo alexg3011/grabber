@@ -2,14 +2,13 @@ package ru.job4j.ood.lsp;
 
 import java.util.List;
 
-public class Trash implements Strategy {
+public class Trash implements Storage {
     private List<Food> trash;
-    private Calculator calculator;
 
     @Override
     public boolean add(Food food) {
         boolean rsl = false;
-        float interest = calculator.run(food);
+        float interest = Calculator.run(food);
         if (interest >= 100) {
             trash.add(food);
             rsl = true;

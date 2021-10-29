@@ -1,6 +1,6 @@
 package ru.job4j.ood.lsp;
 
-public interface Strategy {
+public interface Storage {
 
     boolean add(Food food);
 }
