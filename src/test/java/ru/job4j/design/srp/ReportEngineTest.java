@@ -1,16 +1,20 @@
 package ru.job4j.design.srp;
 
-import static org.junit.Assert.assertThat;
-import static org.hamcrest.Matchers.is;
-
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.junit.Test;
 
+import javax.xml.bind.JAXBException;
 import java.util.Calendar;
+import java.util.List;
+
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 public class ReportEngineTest {
 
     @Test
-    public void whenOldGenerated() {
+    public void whenOldGenerated() throws JAXBException {
         MemStore store = new MemStore();
         Calendar now = Calendar.getInstance();
         Employee worker = new Employee("Ivan", now, now, 100);
@@ -28,7 +32,7 @@ public class ReportEngineTest {
     }
 
     @Test
-    public void whenProgReport() {
+    public void whenProgReport() throws JAXBException {
         MemStore store = new MemStore();
         Calendar now = Calendar.getInstance();
         Employee worker = new Employee("Ivan", now, now, 100);
@@ -52,7 +56,7 @@ public class ReportEngineTest {
     }
 
     @Test
-    public void whenAccountingReport() {
+    public void whenAccountingReport() throws JAXBException {
         MemStore store = new MemStore();
         Calendar now = Calendar.getInstance();
         Employee worker = new Employee("Ivan", now, now, 100);
@@ -70,7 +74,7 @@ public class ReportEngineTest {
     }
 
     @Test
-    public void whenHRReport() {
+    public void whenHRReport() throws JAXBException {
         MemStore store = new MemStore();
         Calendar now = Calendar.getInstance();
         Employee worker = new Employee("Ivan", now, now, 100);
@@ -94,5 +98,38 @@ public class ReportEngineTest {
                 .append(System.lineSeparator());
 
         assertThat(hr.generate(em -> true), is(expect.toString()));
+    }
+
+    @Test
+    public void whenJSONReport() throws JAXBException {
+        MemStore store = new MemStore();
+        Calendar now = Calendar.getInstance();
+        Employee worker = new Employee("Ivan", now, now, 100);
+        Employee worker2 = new Employee("Petr", now, now, 300);
+        List<Employee> employees = List.of(worker, worker2);
+        store.add(worker);
+        store.add(worker2);
+        Report json = new ReportJson(store);
+        Gson gson = new GsonBuilder().create();
+        String expect = gson.toJson(employees);
+        assertThat(json.generate(em -> true), is(expect));
+    }
+
+    @Test
+    public void whenXMLReport() throws JAXBException {
+        MemStore store = new MemStore();
+        Employee worker = new Employee("Ivan", null, null, 100);
+        store.add(worker);
+        Report xml = new ReportXML(store);
+        String exp = """
+                <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+                <employees>
+                    <employee>
+                        <name>Ivan</name>
+                        <salary>100.0</salary>
+                    </employee>
+                </employees>
+                """;
+        assertThat(xml.generate(em -> true), is(exp));
     }
 }
