@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,15 +22,20 @@ public class ReportXML implements Report {
     }
 
     @Override
-    public String generate(Predicate<Employee> filter) throws JAXBException {
+    public String generate(Predicate<Employee> filter) {
         Employees employees = new Employees(store.findBy(filter));
-        String xml;
-        JAXBContext context = JAXBContext.newInstance(Employees.class);
-        Marshaller marshaller = context.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-        StringWriter writer = new StringWriter();
-        marshaller.marshal(employees, writer);
-        xml = writer.getBuffer().toString();
+        String xml = "";
+        try {
+            JAXBContext context = JAXBContext.newInstance(Employees.class);
+            Marshaller marshaller = context.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+            try (StringWriter writer = new StringWriter()) {
+                marshaller.marshal(employees, writer);
+                xml = writer.getBuffer().toString();
+            }
+        } catch (JAXBException | IOException e) {
+            e.printStackTrace();
+        }
         return xml;
     }
 
