@@ -18,11 +18,14 @@ public abstract class AbstractCache<K, V> {
         V value;
         if (link != null) {
             value = link.get();
-        } else {
-            value = load(key);
-            SoftReference<V> newLink = new SoftReference<>(value);
-            cache.put(key, newLink);
+            if (value != null) {
+                return value;
+            }
         }
+        value = load(key);
+        SoftReference<V> newLink = new SoftReference<>(value);
+        cache.put(key, newLink);
+
         return value;
     }
 
