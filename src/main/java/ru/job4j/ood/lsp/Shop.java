@@ -20,5 +20,15 @@ public class Shop implements Storage {
         }
         return rsl;
     }
+
+    @Override
+    public List<Food> getAll() {
+        return shop;
+    }
+
+    @Override
+    public void clean() {
+        shop.clear();
+    }
 }
 

@@ -15,4 +15,14 @@ public class Trash implements Storage {
         }
         return rsl;
     }
+
+    @Override
+    public List<Food> getAll() {
+        return trash;
+    }
+
+    @Override
+    public void clean() {
+        trash.clear();
+    }
 }

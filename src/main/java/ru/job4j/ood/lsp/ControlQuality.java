@@ -14,4 +14,12 @@ public class ControlQuality {
             storage.add(food);
         }
     }
+
+    public void resort() {
+        for (Storage storage : storages) {
+            List<Food> foodList = storage.getAll();
+            storage.clean();
+            foodList.forEach(this::distribute);
+        }
+    }
 }

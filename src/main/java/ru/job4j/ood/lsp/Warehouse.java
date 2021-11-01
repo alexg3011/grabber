@@ -15,4 +15,14 @@ public class Warehouse implements Storage {
         }
         return rsl;
     }
+
+    @Override
+    public List<Food> getAll() {
+        return warehouse;
+    }
+
+    @Override
+    public void clean() {
+        warehouse.clear();
+    }
 }
