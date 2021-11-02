@@ -4,9 +4,9 @@ public class Car implements Transport {
     private final String name;
     private final int size;
 
-    public Car(String name, int size) {
+    public Car(String name) {
         this.name = name;
-        this.size = size;
+        this.size = 1;
     }
 
     @Override

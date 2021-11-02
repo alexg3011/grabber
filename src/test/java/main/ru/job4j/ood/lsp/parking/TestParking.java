@@ -12,7 +12,7 @@ public class TestParking {
 
     @Test
     public void whenCarParking() {
-        Transport car = new Car("VAZ", 1);
+        Transport car = new Car("VAZ");
         Parking parking = new CarsParking(1, 0);
         assertTrue(parking.park(car));
     }
@@ -33,7 +33,7 @@ public class TestParking {
 
     @Test
     public void whenNoPlaceForCar() {
-        Transport car = new Car("Vaz", 1);
+        Transport car = new Car("Vaz");
         Parking parking = new CarsParking(0, 0);
         assertFalse(parking.park(car));
     }

@@ -1,24 +1,43 @@
 package ru.job4j.ood.lsp.parking;
 
-public class CarsParking implements Parking {
-    private final int forCar;
-    private final int forTruck;
+import java.util.ArrayList;
+import java.util.List;
 
-    public CarsParking(int forCar, int forTruck) {
-        this.forCar = forCar;
-        this.forTruck = forTruck;
+public class CarsParking implements Parking {
+    private int carPlace;
+    private int truckPlace;
+    private List<Transport> transports = new ArrayList<>();
+
+    public CarsParking(int carPlace, int truckPlace) {
+        this.carPlace = carPlace;
+        this.truckPlace = truckPlace;
     }
 
     @Override
     public boolean park(Transport transport) {
-        return false;
+        boolean rsl = false;
+        int size = transport.getSize();
+        if (size == 1 && carPlace > 0) {
+            carPlace--;
+            transports.add(transport);
+            rsl = true;
+        } else if (size > 1 && truckPlace >= size) {
+            truckPlace -= size;
+            transports.add(transport);
+            rsl = true;
+        } else if (size > 1 && carPlace >= size) {
+            carPlace -= size;
+            transports.add(transport);
+            rsl = true;
+        }
+        return rsl;
     }
 
-    public int getForCar() {
-        return forCar;
+    public int getCarPlace() {
+        return carPlace;
     }
 
-    public int getForTruck() {
-        return forTruck;
+    public int getTruckPlace() {
+        return truckPlace;
     }
 }
