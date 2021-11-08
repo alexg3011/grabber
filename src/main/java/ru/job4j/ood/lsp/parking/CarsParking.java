@@ -21,8 +21,8 @@ public class CarsParking implements Parking {
             carPlace--;
             transports.add(transport);
             rsl = true;
-        } else if (size > 1 && truckPlace >= size) {
-            truckPlace -= size;
+        } else if (size > 1 && truckPlace > 0) {
+            truckPlace--;
             transports.add(transport);
             rsl = true;
         } else if (size > 1 && carPlace >= size) {
