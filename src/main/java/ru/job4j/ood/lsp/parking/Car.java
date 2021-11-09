@@ -2,16 +2,15 @@ package ru.job4j.ood.lsp.parking;
 
 public class Car implements Transport {
     private final String name;
-    private final int size;
+    public static final int CAR_SIZE = 1;
 
     public Car(String name) {
         this.name = name;
-        this.size = 1;
     }
 
     @Override
     public int getSize() {
-        return size;
+        return CAR_SIZE;
     }
 
     public String getName() {
