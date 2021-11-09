@@ -2,10 +2,9 @@ package ru.job4j.ood.isp.menu;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
-public class CreateMenu implements Menu {
-    private static List<Item> list = new ArrayList<>();
+public class SimpleMenu implements Menu {
+    private List<Item> list = new ArrayList<>();
 
     @Override
     public void add(String parentName, String childName, Action action) {
@@ -41,32 +40,7 @@ public class CreateMenu implements Menu {
         return action;
     }
 
-    public void init(List<Item> items, Scanner scanner) {
-        boolean run = true;
-        Show show = new ShowMenu();
-        while (run) {
-            System.out.println("Select: ");
-            show.showMenu(items);
-            String sel = scanner.nextLine();
-            if (!sel.equals("Exit")) {
-                select(sel, list);
-            } else {
-                run = false;
-            }
-        }
-    }
-
-    public static void main(String[] args) {
-        Menu menu = new CreateMenu();
-        Action action = new DoAction();
-        Action action1 = new NothingAction();
-        CreateMenu show = new CreateMenu();
-        menu.add("", "Задача 1.", action);
-        menu.add("Задача 1.", "---- Задача 1.1.", action);
-        menu.add("---- Задача 1.1.", "--------- Задача 1.1.1.", action);
-        menu.add("---- Задача 1.1.", "--------- Задача 1.1.2.", action);
-        menu.add("Задача 1.", "---- Задача 1.2.", action1);
-
-        show.init(list, new Scanner(System.in));
+    public List<Item> getList() {
+        return list;
     }
 }
