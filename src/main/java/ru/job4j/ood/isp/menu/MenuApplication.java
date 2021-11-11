@@ -1,37 +1,40 @@
 package ru.job4j.ood.isp.menu;
 
-import java.util.List;
 import java.util.Scanner;
 
 public class MenuApplication {
 
-    public void init(List<Menu.Item> items, Scanner scanner) {
+    private void init(Scanner scanner, Menu menu, SubMenuPrinter console) {
         boolean run = true;
-        SubMenuPrinter show = new ConsoleSubMenuPrinter();
-        SimpleMenu simpleMenu = new SimpleMenu();
         while (run) {
             System.out.println("Select: ");
-            show.showMenu(items);
-            String sel = scanner.nextLine();
-            if (!sel.equals("Exit")) {
-                simpleMenu.select(sel, items);
+            System.out.println(console);
+            String select = scanner.nextLine();
+            if (!select.equals("Exit")) {
+                Action action = menu.select(select);
+                if (action != null) {
+                    action.action();
+                } else {
+                    System.out.println("Действие не найдено!");
+                }
             } else {
+                menu.select(select).action();
                 run = false;
             }
         }
     }
 
     public static void main(String[] args) {
-        SimpleMenu menu = new SimpleMenu();
-        Action action = new DoAction();
-        Action action1 = new NothingAction();
-        MenuApplication application = new MenuApplication();
-        menu.add("", "Задача 1.", action);
-        menu.add("Задача 1.", "---- Задача 1.1.", action);
-        menu.add("---- Задача 1.1.", "--------- Задача 1.1.1.", action);
-        menu.add("---- Задача 1.1.", "--------- Задача 1.1.2.", action);
-        menu.add("Задача 1.", "---- Задача 1.2.", action1);
-
-        application.init(menu.getList(), new Scanner(System.in));
+        Menu menu = new SimpleMenu();
+        SubMenuPrinter console = new ConsoleSubMenuPrinter();
+        menu.add("", "Задача 1.", new NothingAction());
+        menu.add("Задача 1.", "Задача 1.1.", new DoAction());
+        menu.add("Задача 1.1.", "Задача 1.1.1.", new DoAction());
+        menu.add("Задача 1.1.", "Задача 1.1.2.", new DoAction());
+        menu.add("Задача 1.", "Задача 1.2.", new DoAction());
+        menu.add("", "Exit", new NothingAction());
+        MenuApplication app = new MenuApplication();
+        Scanner scanner = new Scanner(System.in);
+        app.init(scanner, menu, console);
     }
 }

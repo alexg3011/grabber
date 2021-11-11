@@ -1,46 +1,57 @@
 package ru.job4j.ood.isp.menu;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class SimpleMenu implements Menu {
-    private List<Item> list = new ArrayList<>();
+
+    protected static final List<Item> ITEMS = new LinkedList<>();
 
     @Override
     public void add(String parentName, String childName, Action action) {
-        if (list.isEmpty()) {
-            list.add(new Item(parentName, childName, new ArrayList<>(), action));
+        Item parent = findItemByName(parentName);
+        if (parent != null) {
+            parent.addChild(new Item(childName, action));
         } else {
-            addChild(parentName, new Item(parentName, childName, new ArrayList<>(), action), list);
+            ITEMS.add(new Item(childName, action));
         }
     }
 
-    private void addChild(String parentName, Item child, List<Item> list) {
-        for (Item item : list) {
-            if (item.getName().equals(parentName)) {
-                item.addItem(child);
-            } else {
-                addChild(parentName, child, item.getItemList());
-            }
-        }
-    }
-
-    public Action select(String itemName, List<Item> items) {
+    @Override
+    public Action select(String name) {
         Action action = null;
-        for (Item item : items) {
-            if (item.getName().equals(itemName)) {
-                action = item.getAction();
-                action.action();
-                break;
-            }
-            if (!item.getItemList().isEmpty()) {
-                select(itemName, item.getItemList());
-            }
+        Item item = findItemByName(name);
+        if (item != null) {
+            action = item.getAction();
         }
         return action;
     }
 
-    public List<Item> getList() {
-        return list;
+    private Item findItemByName(String name) {
+        Item rsl = null;
+        for (Item item : ITEMS) {
+            Item it = findIntoItem(item, name);
+            if (it != null) {
+                rsl = it;
+                break;
+            }
+        }
+        return rsl;
+    }
+
+    private Item findIntoItem(Item item, String name) {
+        Item rsl = null;
+        if (item.getName().equals(name)) {
+            rsl = item;
+        } else if (item.getChildList().size() > 0) {
+            for (Item it : item.getChildList()) {
+                Item child = findIntoItem(it, name);
+                if (child != null) {
+                    rsl = child;
+                    break;
+                }
+            }
+        }
+        return rsl;
     }
 }

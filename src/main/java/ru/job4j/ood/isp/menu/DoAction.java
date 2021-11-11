@@ -4,6 +4,6 @@ public class DoAction implements Action {
 
     @Override
     public void action() {
-        System.out.println("touch me");
+        System.out.println("Do action");
     }
 }
