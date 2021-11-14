@@ -19,8 +19,7 @@ public class ConsoleSubMenuPrinter implements SubMenuPrinter {
     }
 
     @Override
-    public String toString() {
-        List<Menu.Item> items = SimpleMenu.ITEMS;
+    public String toString(List<Menu.Item> items) {
         StringBuilder sb = new StringBuilder();
         if (!items.isEmpty()) {
             for (Menu.Item item : items) {

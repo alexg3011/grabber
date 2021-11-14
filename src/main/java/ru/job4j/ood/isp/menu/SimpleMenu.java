@@ -5,7 +5,11 @@ import java.util.List;
 
 public class SimpleMenu implements Menu {
 
-    protected static final List<Item> ITEMS = new LinkedList<>();
+    private final List<Item> items = new LinkedList<>();
+
+    public List<Item> getItems() {
+        return items;
+    }
 
     @Override
     public void add(String parentName, String childName, Action action) {
@@ -13,7 +17,7 @@ public class SimpleMenu implements Menu {
         if (parent != null) {
             parent.addChild(new Item(childName, action));
         } else {
-            ITEMS.add(new Item(childName, action));
+            items.add(new Item(childName, action));
         }
     }
 
@@ -29,7 +33,7 @@ public class SimpleMenu implements Menu {
 
     private Item findItemByName(String name) {
         Item rsl = null;
-        for (Item item : ITEMS) {
+        for (Item item : items) {
             Item it = findIntoItem(item, name);
             if (it != null) {
                 rsl = it;

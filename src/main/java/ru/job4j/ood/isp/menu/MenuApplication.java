@@ -4,11 +4,11 @@ import java.util.Scanner;
 
 public class MenuApplication {
 
-    private void init(Scanner scanner, Menu menu, SubMenuPrinter console) {
+    private void init(Scanner scanner, Menu menu, String itemName) {
         boolean run = true;
         while (run) {
             System.out.println("Select: ");
-            System.out.println(console);
+            System.out.println(itemName);
             String select = scanner.nextLine();
             if (!select.equals("Exit")) {
                 Action action = menu.select(select);
@@ -35,6 +35,6 @@ public class MenuApplication {
         menu.add("", "Exit", new NothingAction());
         MenuApplication app = new MenuApplication();
         Scanner scanner = new Scanner(System.in);
-        app.init(scanner, menu, console);
+        app.init(scanner, menu, console.toString(menu.getItems()));
     }
 }

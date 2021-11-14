@@ -8,6 +8,8 @@ public interface Menu {
 
     Action select(String itemName);
 
+    public List<Item> getItems();
+
     class Item {
         private final String name;
         private final List<Item> childList = new LinkedList<>();
