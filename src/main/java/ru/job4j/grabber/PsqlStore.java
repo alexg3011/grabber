@@ -107,7 +107,7 @@ public class PsqlStore implements Store, AutoCloseable {
 
     public static void main(String[] args) {
         Properties properties = new Properties();
-        try (FileReader fr = new FileReader("src/main/resources/cfg.properties")) {
+        try (FileReader fr = new FileReader("src/main/resources/app.properties")) {
             properties.load(fr);
         } catch (IOException e) {
             e.printStackTrace();
