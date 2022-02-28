@@ -10,3 +10,5 @@
   </h2>
 Проект собирается с помощью Maven в jar архив:
 mvn install
+
+Email для связи: alexandrg3011@gmail.com
